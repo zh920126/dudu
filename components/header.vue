@@ -27,11 +27,11 @@
       </el-row>
       <!-- 用户登录信息 -->
       <el-row type="flex" align="middle" class="account-link">
-        <el-dropdown v-if="userInfo.username" trigger="hover" class="account">
+        <el-dropdown v-if="$store.state.user.userInfo.token" trigger="hover" class="account">
           <span class="el-dropdown-link">
             <nuxt-link to="/">
-              <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt="">
-              用户名
+              <img :src="$axios.defaults.baseURL + $store.state.user.userInfo.user.defaultAvatar">
+              {{ $store.state.user.userInfo.user.nickname }}
             </nuxt-link>
             <i class="el-icon-arrow-down el-icon-caret-bottom" />
           </span>
@@ -62,12 +62,23 @@ export default {
       }
     }
   },
+  watch: {
+    'this.$store.state.user.userInfo.token' () {
+      console.log(123)
+    }
+  },
   created () {
 
   },
   methods: {
     // 点击退出
     handlerLogout () {
+      // 删除掉vuex中的user的数据
+      this.$store.commit('user/clearUserInfo')
+      this.$message({
+        type: 'success',
+        message: '退出成功'
+      })
     }
   }
 }
